@@ -104,12 +104,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 
-		var option:Option = new Option('Score Text Grow on Hit',
-			"If unchecked, disables the Score text growing\neverytime you hit a note.",
-			'scoreZoom',
-			BOOL);
-		addOption(option);
-
 		var option:Option = new Option('Health Bar Opacity',
 			'How much transparent should the health bar and icons be.',
 			'healthBarAlpha',
