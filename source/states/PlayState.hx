@@ -1173,7 +1173,6 @@ class PlayState extends MusicBeatState
 
 		updateScoreText();
 		if (!miss && !cpuControlled && scoreBop)
-			doScoreBop();
 
 		callOnScripts('onUpdateScore', [miss]);
 	}
@@ -1184,14 +1183,21 @@ class PlayState extends MusicBeatState
 		if(totalPlayed != 0)
 		{
 			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-			str += ' (${percent}%) - ' + Language.getPhrase(ratingFC);
+			str = '${percent}% - ' + '[' + Language.getPhrase(ratingFC) + ']';
+		}
+		else
+		{
+			str = '0% - ' + Language.getPhrase(ratingFC);
 		}
 
 		var tempScore:String;
-		if(!instakillOnMiss) tempScore = Language.getPhrase('score_text', 'Score: {1} | Misses: {2} | Rating: {3}', [songScore, songMisses, str]);
-		else tempScore = Language.getPhrase('score_text_instakill', 'Score: {1} | Rating: {2}', [songScore, str]);
-		scoreTxt.text = tempScore;
-	}
+		if(!instakillOnMiss) 
+			tempScore = Language.getPhrase('score_text', '- Score: {1}   Misses: {2}   Accuracy: {3} -', [songScore, songMisses, str]);
+		else
+			tempScore = Language.getPhrase('score_text_instakill', '- Score: {1}   Accuracy: {2} -', [songScore, str]);
+
+	scoreTxt.text = tempScore;
+}
 
 	public dynamic function fullComboFunction()
 	{
@@ -1213,21 +1219,9 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function doScoreBop():Void {
-		if(!ClientPrefs.data.scoreZoom)
-			return;
-
-		if(scoreTxtTween != null)
-			scoreTxtTween.cancel();
-
-		scoreTxt.scale.x = 1.075;
-		scoreTxt.scale.y = 1.075;
-		scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
-			onComplete: function(twn:FlxTween) {
-				scoreTxtTween = null;
-			}
-		});
-	}
+/*	public function doScoreBop():Void {
+		//滚一边子去，别当老子的路 我看你啥也不像，就像个棍母
+	}*/
 
 	public function setSongTime(time:Float)
 	{
