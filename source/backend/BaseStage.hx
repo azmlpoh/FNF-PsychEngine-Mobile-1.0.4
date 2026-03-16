@@ -41,6 +41,7 @@ class BaseStage extends FlxBasic
 	public var unspawnNotes(get, never):Array<Note>;
 	
 	public var camGame(get, never):FlxCamera;
+	public var camBar(get, never):FlxCamera;
 	public var camHUD(get, never):FlxCamera;
 	public var camOther(get, never):FlxCamera;
 
@@ -167,6 +168,7 @@ class BaseStage extends FlxBasic
 	}
 	
 	inline private function get_camGame():FlxCamera return game.camGame;
+	inline private function get_camBar():FlxCamera return game.camBar;
 	inline private function get_camHUD():FlxCamera return game.camHUD;
 	inline private function get_camOther():FlxCamera return game.camOther;
 
