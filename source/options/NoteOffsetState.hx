@@ -15,6 +15,7 @@ class NoteOffsetState extends MusicBeatState
 
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
+	public var camBar:FlxCamera;
 	public var camOther:FlxCamera;
 
 	var coolText:FlxText;
@@ -43,6 +44,10 @@ class NoteOffsetState extends MusicBeatState
 
 		// Cameras
 		camGame = initPsychCamera();
+
+		camBar = new FlxCamera();
+		camBar.bgColor.alpha = 0;
+		FlxG.cameras.add(camBar, false);
 
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
