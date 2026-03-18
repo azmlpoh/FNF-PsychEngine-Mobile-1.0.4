@@ -216,6 +216,8 @@ class PlayState extends MusicBeatState
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
+	public var missesTxt:FlxText;
+	public var accuracyTxt:FlxText;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 
@@ -491,6 +493,8 @@ class PlayState extends MusicBeatState
 		startCharacterScripts(boyfriend.curCharacter);
 		#end
 
+		callOnScripts('create');
+
 		uiGroup = new FlxSpriteGroup();
 		comboGroup = new FlxSpriteGroup();
 		noteGroup = new FlxTypedGroup<FlxBasic>();
@@ -568,12 +572,26 @@ class PlayState extends MusicBeatState
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
 
-		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt = new FlxText(healthBar.x + 10, healthBar.y, 100, "", 16);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(scoreTxt);
+
+		missesTxt = new FlxText(healthBar.x + healthBar.width - 110, healthBar.y, 100, "", 16);
+		missesTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		missesTxt.scrollFactor.set();
+		missesTxt.borderSize = 1.25;
+		missesTxt.visible = !ClientPrefs.data.hideHud;
+		uiGroup.add(missesTxt);
+
+		accuracyTxt = new FlxText(healthBar.x + healthBar.width/2 - 50, healthBar.y + 20, 100, "", 14);
+		accuracyTxt.setFormat(Paths.font("vcr.ttf"), 14, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		accuracyTxt.scrollFactor.set();
+		accuracyTxt.borderSize = 1.25;
+		accuracyTxt.visible = !ClientPrefs.data.hideHud;
+		uiGroup.add(accuracyTxt);
 
 		botplayTxt = new FlxText(400, healthBar.y - 90, FlxG.width - 800, Language.getPhrase("Botplay").toUpperCase(), 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -658,6 +676,7 @@ class PlayState extends MusicBeatState
 
 		stagesFunc(function(stage:BaseStage) stage.createPost());
 		callOnScripts('onCreatePost');
+		callOnScripts('postCreate');
 		
 		var splash:NoteSplash = new NoteSplash();
 		grpNoteSplashes.add(splash);
@@ -1173,24 +1192,28 @@ class PlayState extends MusicBeatState
 
 		updateScoreText();
 		if (!miss && !cpuControlled && scoreBop)
-			doScoreBop();
 
 		callOnScripts('onUpdateScore', [miss]);
 	}
 
 	public dynamic function updateScoreText()
 	{
-		var str:String = Language.getPhrase('rating_$ratingName', ratingName);
+		scoreTxt.text = Std.string(songScore);
+
+		if(!instakillOnMiss)
+			missesTxt.text = Std.string(songMisses);
+		else
+			missesTxt.text = '';
+
 		if(totalPlayed != 0)
 		{
 			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-			str += ' (${percent}%) - ' + Language.getPhrase(ratingFC);
+			accuracyTxt.text = percent + '% [' + Language.getPhrase(ratingFC) + ']';
 		}
-
-		var tempScore:String;
-		if(!instakillOnMiss) tempScore = Language.getPhrase('score_text', 'Score: {1} | Misses: {2} | Rating: {3}', [songScore, songMisses, str]);
-		else tempScore = Language.getPhrase('score_text_instakill', 'Score: {1} | Rating: {2}', [songScore, str]);
-		scoreTxt.text = tempScore;
+		else
+		{
+			accuracyTxt.text = '0% [' + Language.getPhrase(ratingFC) + ']';
+		}
 	}
 
 	public dynamic function fullComboFunction()
@@ -1213,21 +1236,9 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function doScoreBop():Void {
-		if(!ClientPrefs.data.scoreZoom)
-			return;
-
-		if(scoreTxtTween != null)
-			scoreTxtTween.cancel();
-
-		scoreTxt.scale.x = 1.075;
-		scoreTxt.scale.y = 1.075;
-		scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
-			onComplete: function(twn:FlxTween) {
-				scoreTxtTween = null;
-			}
-		});
-	}
+/*	public function doScoreBop():Void {
+		//滚一边子去，别当老子的路 我看你啥也不像，就像个棍母
+	}*/
 
 	public function setSongTime(time:Float)
 	{
@@ -1727,6 +1738,7 @@ class PlayState extends MusicBeatState
 		}
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
+		callOnScripts('update', [elapsed]);
 
 		super.update(elapsed);
 
@@ -1908,6 +1920,7 @@ class PlayState extends MusicBeatState
 
 		setOnScripts('botPlay', cpuControlled);
 		callOnScripts('onUpdatePost', [elapsed]);
+		callOnScripts('postUpdate', [elapsed]);
 	}
 
 	// Health icon updaters
