@@ -572,21 +572,21 @@ class PlayState extends MusicBeatState
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
 
-		scoreTxt = new FlxText(healthBar.x + 10, healthBar.y + 25, 100, "", 20);
+		scoreTxt = new FlxText(healthBar.x + 10, healthBar.y + 25, 0, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(scoreTxt);
 
-		missesTxt = new FlxText(healthBar.x + healthBar.width/2 - 50, healthBar.y + 25, 100, "", 20);
+		missesTxt = new FlxText(healthBar.x + healthBar.width/2 - 50, healthBar.y + 25, 0, "", 20);
 		missesTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		missesTxt.scrollFactor.set();
 		missesTxt.borderSize = 1.25;
 		missesTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(missesTxt);
 
-		accuracyTxt = new FlxText(healthBar.x + healthBar.width - 110, healthBar.y + 25, 100, "", 5);
+		accuracyTxt = new FlxText(healthBar.x + healthBar.width - 110, healthBar.y + 25, 0, "", 5);
 		accuracyTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		accuracyTxt.scrollFactor.set();
 		accuracyTxt.borderSize = 1.25;
@@ -1198,10 +1198,10 @@ class PlayState extends MusicBeatState
 
 	public dynamic function updateScoreText()
 	{
-		scoreTxt.text = 'Score: ' + songScore;
+		scoreTxt.text = 'Score: ' + Std.string(songScore);
 
 		if(!instakillOnMiss)
-			missesTxt.text = 'Misses: ' + songMisses;
+			missesTxt.text = 'Misses: ' + Std.string(songMisses);
 		else
 			missesTxt.text = '';
 
@@ -1212,7 +1212,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			accuracyTxt.text = 'Accuracy: 0% [' + Language.getPhrase(ratingFC) + ']';
+			accuracyTxt.text = 'Accuracy: ' + '0% [' + Language.getPhrase(ratingFC) + ']';
 		}
 	}
 
