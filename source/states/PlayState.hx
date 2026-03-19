@@ -1198,10 +1198,10 @@ class PlayState extends MusicBeatState
 
 	public dynamic function updateScoreText()
 	{
-		scoreTxt.text = 'Score: ' + Std.string(songScore);
+		scoreTxt.text = 'Score: ' + songScore;
 
 		if(!instakillOnMiss)
-			missesTxt.text = 'Misses: ' + Std.string(songMisses);
+			missesTxt.text = 'Misses: ' + songMisses;
 		else
 			missesTxt.text = '';
 
@@ -1212,7 +1212,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			accuracyTxt.text = 'Accuracy: ' + '0% [' + Language.getPhrase(ratingFC) + ']';
+			accuracyTxt.text = 'Accuracy: 0% [' + Language.getPhrase(ratingFC) + ']';
 		}
 	}
 
