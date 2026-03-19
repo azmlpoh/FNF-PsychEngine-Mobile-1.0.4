@@ -5,6 +5,7 @@ import openfl.Lib;
 import haxe.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 import openfl.system.System as OpenFlSystem;
 import lime.system.System as LimeSystem;
 
@@ -32,6 +33,7 @@ class FPSCounter extends TextField
 		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
 	**/
 	public var memoryMegas(get, never):Float;
+	public var peakMemory:Float = 0;
 
 	@:noCompletion private var times:Array<Float>;
 	@:noCompletion private var lastFramerateUpdateTime:Float;
@@ -40,41 +42,52 @@ class FPSCounter extends TextField
 	@:noCompletion private var prevTime:Int;
 
 	public var os:String = '';
+	private var latencyTimer:Float = 0;
 
 	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000)
 	{
 		super();
-
-		#if !officialBuild
-		if (LimeSystem.platformName == LimeSystem.platformVersion || LimeSystem.platformVersion == null)
-			os = '\nOS: ${LimeSystem.platformName}' #if cpp + ' ${getArch() != 'Unknown' ? getArch() : ''}' #end;
-		else
-			os = '\nOS: ${LimeSystem.platformName}' #if cpp + ' ${getArch() != 'Unknown' ? getArch() : ''}' #end + ' - ${LimeSystem.platformVersion}';
-		#end
 
 		positionFPS(x, y);
 
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 14, color);
-		width = FlxG.width;
+
+		var format:TextFormat = new TextFormat(Paths.font("vcr.ttf"), 14, color);
+		format.align = TextFormatAlign.LEFT;
+		defaultTextFormat = format;
+
+		border = true;
+		borderColor = 0xFF000000;
+
+		width = 200;
 		multiline = true;
-		text = "FPS: ";
+		text = "FPS: 0\nLatency: 0ms\nRAM: 0MB (0MB peak)";
 
 		times = [];
 		lastFramerateUpdateTime = Timer.stamp();
 		prevTime = Lib.getTimer();
 		updateTime = prevTime + 500;
+		latencyTimer = Timer.stamp();
 	}
-
 
 	public dynamic function updateText():Void // so people can override it in hscript
 	{
+		if (memoryMegas > peakMemory)
+			peakMemory = memoryMegas;
+
+		var currentTime:Float = Timer.stamp();
+		var latency:Int = Math.round((currentTime - latencyTimer) * 1000);
+		latencyTimer = currentTime;
+
+		var currentRAM:String = flixel.util.FlxStringUtil.formatBytes(memoryMegas);
+		var peakRAM:String = flixel.util.FlxStringUtil.formatBytes(peakMemory);
+
 		text = 
-		'FPS: $currentFPS' + 
-		'\nMemory: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}' +
-		os;
+		'FPS: $currentFPS\n' +
+		'Latency: ${latency}ms\n' +
+		'RAM: $currentRAM ($peakRAM peak)';
 
 		textColor = 0xFFFFFFFF;
 		if (currentFPS < FlxG.stage.window.frameRate * 0.5)
@@ -117,7 +130,7 @@ class FPSCounter extends TextField
 			times.push(now);
 			while (times[0] < now - 1000)
 				times.shift();
-			// prevents the overlay from updating every frame, why would you need to anyways @crowplexus
+			
 			if (deltaTimeout < 50)
 			{
 				deltaTimeout += deltaTime;
