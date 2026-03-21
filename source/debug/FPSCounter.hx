@@ -29,12 +29,12 @@ class FPSCounter extends TextField
 		selectable = false;
 		mouseEnabled = false;
 
-		var filter = new openfl.filters.GlowFilter(0x000000, 1, 2, 2, 10, 1);
-		filters = [filter];
-
 		var format:TextFormat = new TextFormat(Paths.font("vcr.ttf"), 14, color);
 		format.align = TextFormatAlign.LEFT;
 		defaultTextFormat = format;
+
+		background = true;
+		backgroundColor = 0xFF252525;
 
 		width = 290;
 		multiline = true;
@@ -45,8 +45,7 @@ class FPSCounter extends TextField
 		prevTime = Lib.getTimer();
 		updateTime = prevTime + 500;
 		latencyTimer = Timer.stamp();
-}
-	//感谢DeepSeek大跌的亲手相助
+	}
 
 	public dynamic function updateText():Void
 	{
@@ -71,6 +70,7 @@ class FPSCounter extends TextField
 		textColor = 0xFFFFFFFF;
 		if (currentFPS < FlxG.stage.window.frameRate * 0.5) textColor = 0xFFFF0000;
 	}
+	//感谢DeepSeek大跌的亲手相助
 
 	private override function __enterFrame(deltaTime:Float):Void
 	{
