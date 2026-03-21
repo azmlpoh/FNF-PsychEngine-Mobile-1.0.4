@@ -572,22 +572,22 @@ class PlayState extends MusicBeatState
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
 
-		scoreTxt = new FlxText(healthBar.x + 10, healthBar.y + 25, 0, "", 20);
+		scoreTxt = new FlxText(healthBar.x + 10, healthBar.y + 25, FlxG.width, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(scoreTxt);
 
-		missesTxt = new FlxText(healthBar.x + healthBar.width/2 - 50, healthBar.y + 25, 0, "", 20);
+		missesTxt = new FlxText(healthBar.x + healthBar.width/2 - 50, healthBar.y + 25, FlxG.width, "", 18);
 		missesTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		missesTxt.scrollFactor.set();
 		missesTxt.borderSize = 1.25;
 		missesTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(missesTxt);
 
-		accuracyTxt = new FlxText(healthBar.x + healthBar.width - 110, healthBar.y + 25, 0, "", 5);
-		accuracyTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		accuracyTxt = new FlxText(healthBar.x + healthBar.width - 110, healthBar.y + 25, FlxG.width, "", 18);
+		accuracyTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		accuracyTxt.scrollFactor.set();
 		accuracyTxt.borderSize = 1.25;
 		accuracyTxt.visible = !ClientPrefs.data.hideHud;
